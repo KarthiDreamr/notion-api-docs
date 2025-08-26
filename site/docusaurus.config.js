@@ -47,6 +47,8 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: '../docs',           // read content from repo/docs
+          routeBasePath: 'docs',     // URLs like /docs/quickstart
           sidebarPath: require.resolve('./sidebars.js'),
           // Edit this page link
           editUrl: 'https://github.com/KarthiDreamr/notion-api-docs/tree/main/',

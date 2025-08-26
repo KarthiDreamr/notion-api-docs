@@ -1,0 +1,37 @@
+{
+    "name": "notion-api-docs",
+    "version": "1.0.0",
+    "description": "Developer documentation portal for Notion API integration",
+    "scripts": {
+      "postman:to-openapi": "npx @scalar/postman-to-openapi ./postman/collection.json -o ./openapi/openapi.yaml",
+      "openapi:lint": "npx @stoplight/spectral-cli lint ./openapi/openapi.yaml",
+      "openapi:validate": "npm run postman:to-openapi && npm run openapi:lint",
+      "docs:dev": "cd site && npm run start",
+      "docs:build": "cd site && npm run build",
+      "docs:serve": "cd site && npm run serve",
+      "docs:clear": "cd site && npm run clear",
+      "examples:install": "cd examples/frontend/js-fetch && npm install && cd ../react && npm install && cd ../../backend/node-express && npm install && cd ../python-fastapi && pip install -r requirements.txt",
+      "examples:test": "cd examples && npm run test:all",
+      "ci:validate": "npm run openapi:validate && npm run docs:build",
+      "dev": "npm run docs:dev"
+    },
+    "devDependencies": {
+      "@scalar/postman-to-openapi": "^1.0.0",
+      "@stoplight/spectral-cli": "^6.0.0"
+    },
+    "keywords": [
+      "notion",
+      "api",
+      "documentation",
+      "docs-as-code",
+      "openapi",
+      "docusaurus"
+    ],
+    "author": "KarthiDreamr",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/KarthiDreamr/notion-api-docs.git"
+    }
+  }
+  

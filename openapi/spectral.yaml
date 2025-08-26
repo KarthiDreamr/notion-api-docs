@@ -1,0 +1,35 @@
+# Spectral OpenAPI linting rules
+extends: ["@stoplight/spectral/rulesets/oas"]
+
+rules:
+  # Require operation summaries and descriptions
+  operation-description: error
+  operation-summary: error
+  operation-operationId: error
+  
+  # Ensure examples are provided
+  oas3-examples-value-or-externalValue: error
+  
+  # Schema requirements
+  oas3-schema-description: error
+  
+  # Security requirements
+  operation-security-defined: error
+  
+  # Custom rules for API docs
+  info-contact: error
+  info-description: error
+  tag-description: error
+  
+  # Ensure consistent naming
+  operation-operationId-valid-in-url: error
+  path-params: error
+  
+  # Response requirements
+  operation-success-response: error
+  
+overrides:
+  # Relax rules for generated specs if needed
+  - files: ["openapi.yaml"]
+    rules:
+      # Can override specific rules here if Postman conversion creates issues

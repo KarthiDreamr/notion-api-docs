@@ -16,3 +16,30 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Documentation build artifacts  
+site/build/
+site/.docusaurus/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Generated OpenAPI
+openapi/openapi.yaml
+openapi/*.generated.*
+
+# Example app dependencies and builds
+examples/**/node_modules/
+examples/**/dist/
+examples/**/build/
+examples/**/.env
+examples/**/.venv/
+examples/**/__pycache__/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

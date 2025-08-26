@@ -83,11 +83,11 @@ const config = {
             position: 'left',
             label: 'Guides',
           },
-          {
-            to: '/api-reference',
-            position: 'left',
-            label: 'API Reference',
-          },
+          // {
+          //   to: '/api-reference',
+          //   position: 'left',
+          //   label: 'API Reference',
+          // },
           {
             href: 'https://github.com/KarthiDreamr/notion-api-docs',
             label: 'GitHub',

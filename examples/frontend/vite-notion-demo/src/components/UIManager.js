@@ -826,12 +826,12 @@ export class UIManager {
 
     // Event listeners
     document.getElementById('get-comments-btn')?.addEventListener('click', async () => {
-      const pageId = document.getElementById('comments-page-id-input')?.value?.trim();
-      if (!pageId) {
+      const blockId = document.getElementById('comments-page-id-input')?.value?.trim();
+      if (!blockId) {
         window.notionApiDemo.toast.warning('Please enter a page ID');
         return;
       }
-      await this.executeApiCall('Get Comments', () => api.getComments(pageId), 'comments-results');
+      await this.executeApiCall('Get Comments', () => api.getComments(blockId), 'comments-results');
     });
 
     document.getElementById('add-comment-btn')?.addEventListener('click', async () => {

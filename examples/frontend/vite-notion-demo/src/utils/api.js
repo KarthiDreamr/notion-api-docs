@@ -75,20 +75,28 @@ export class NotionAPI {
    */
   formatError(error) {
     if (!error.response) {
+      // Log the full error for debugging
+      console.error('Network error details:', error);
+      
       // More specific error handling for different types of network issues
-      if (error.code === 'ERR_NETWORK' || error.message?.includes('CORS')) {
-        return new Error('CORS Error: Direct API requests from localhost are blocked. Consider deploying to a hosted domain or using a proxy server.');
-      }
       if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
         return new Error('Request timeout: The API request took too long to complete');
       }
       if (error.message?.includes('ERR_CONNECTION_REFUSED')) {
         return new Error('Connection refused: Unable to reach the Notion API servers');
       }
+      if (error.code === 'ERR_NETWORK') {
+        // Check if we're in development vs production
+        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (isDev) {
+          return new Error('CORS Error: Direct API requests from localhost are blocked. Please restart the dev server or deploy to a hosted domain.');
+        } else {
+          return new Error('Network Error: Unable to connect to Notion API. Please check your token and internet connection.');
+        }
+      }
       
       // Generic network error as fallback
-      console.error('Network error details:', error);
-      return new Error(`Connection error: ${error.message || 'Unable to connect to Notion API'}. This may be due to CORS restrictions when running from localhost.`);
+      return new Error(`Connection error: ${error.message || 'Unable to connect to Notion API'}. Please check your API token and try again.`);
     }
 
     const { status, data } = error.response;

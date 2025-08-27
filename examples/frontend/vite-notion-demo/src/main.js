@@ -29,18 +29,36 @@ class NotionAPIDemo {
     try {
       console.log('🚀 Initializing Notion API Demo...');
       
+      // Debug: Check environment variables
+      console.log('Environment check:', {
+        isDev: import.meta.env.DEV,
+        hasToken: !!import.meta.env.VITE_NOTION_API_TOKEN,
+        tokenPrefix: import.meta.env.VITE_NOTION_API_TOKEN?.substring(0, 8) + '...'
+      });
+      
       // Show loading screen
       this.showLoadingScreen();
       
       // Initialize storage
       this.storage.init();
       
-      // Load saved token if exists
+      // Load token from environment variable or storage
+      const envToken = import.meta.env.VITE_NOTION_API_TOKEN;
       const savedToken = this.storage.getToken();
-      if (savedToken) {
-        this.api.setToken(savedToken);
+      const token = envToken || savedToken;
+      
+      if (token) {
+        console.log('✅ Token found:', token.startsWith('ntn_') ? 'ntn_...' : 'secret_...');
+        this.api.setToken(token);
         this.hideTokenSetup();
         this.updateConnectionStatus(true);
+        
+        // If using env token, also save it to storage for consistency
+        if (envToken && !savedToken) {
+          this.storage.saveToken(envToken);
+        }
+      } else {
+        console.log('⚠️ No token found in environment or storage');
       }
       
       // Initialize UI components

@@ -44,7 +44,7 @@ curl -s -X GET "https://api.notion.com/v1/users" \
   -H "Content-Type: application/json"
 ```
 
-Alternatively, retrieve the bot user tied to your token:
+Retrieve the bot user tied to your token:
 ```bash
 curl -s -X GET "https://api.notion.com/v1/users/me" \
   -H "Authorization: Bearer ${NOTION_TOKEN}" \
@@ -57,20 +57,16 @@ Expected success indicators:
 - For /v1/users: a JSON object containing results (array of user objects).
 - For /v1/users/me: a JSON object describing your bot user.
 
-## 3) Test call (JS fetch)
+## 3) Test call (JavaScript - Vanilla JS + Vite frontend)
 
-Create a small script (node >= 18) to verify headers and response parsing:
+Create a minimal frontend fetch example:
 ```js
-// quickstart-test.js
+// main.js
 const BASE_URL = "https://api.notion.com";
-const token = process.env.NOTION_TOKEN;
-const version = process.env.NOTION_VERSION || "2022-02-22";
+const token = import.meta.env.VITE_NOTION_TOKEN;
+const version = import.meta.env.VITE_NOTION_VERSION || "2022-02-22";
 
-if (!token) {
-  throw new Error("NOTION_TOKEN is missing. Set it before running this script.");
-}
-
-async function main() {
+async function fetchUsers() {
   const res = await fetch(`${BASE_URL}/v1/users`, {
     method: "GET",
     headers: {
@@ -81,34 +77,59 @@ async function main() {
   });
 
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`HTTP ${res.status}: ${errorText}`);
+    const text = await res.text();
+    throw new Error(`HTTP ${res.status}: ${text}`);
   }
 
   const data = await res.json();
-  console.log("✅ Success. First page of users:");
-  console.log(JSON.stringify(data, null, 2));
+  console.log("✅ Users fetched:", data);
+  return data;
 }
 
-main().catch(err => {
-  console.error("❌ Request failed:", err.message);
-  process.exit(1);
+fetchUsers().catch(err => {
+  console.error("❌ Fetch failed:", err.message);
 });
 ```
 
-Run:
-```bash
-node quickstart-test.js
+## 4) Test call (Python - Flask backend)
+
+Minimal example to fetch users server-side:
+```python
+# app.py
+import os
+import requests
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+NOTION_VERSION = os.getenv("NOTION_VERSION", "2022-02-22")
+
+@app.route('/users')
+def list_users():
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Notion-Version": NOTION_VERSION,
+        "Content-Type": "application/json"
+    }
+    response = requests.get('https://api.notion.com/v1/users', headers=headers)
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        return jsonify({'error': str(e), 'body': response.text}), response.status_code
+    return jsonify(response.json())
+
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
 ```
 
 ## Common errors and fixes
+- 401 unauthorized: Check NOTION_TOKEN value and that the integration has access to the workspace content being requested.
+- 400/404 with version issues: Ensure Notion-Version header is present and matches a supported date string (e.g., 2022-02-22).
+- 429 rate limited: Wait and retry with backoff; keep requests minimal during testing.
+- 403 permission errors: Share the target database/page with your integration and retry.
 
-- 401 unauthorized: Check NOTION_TOKEN value and that the integration has access to the workspace content being requested.  
-- 400/404 with version issues: Ensure Notion-Version header is present and matches a supported date string (e.g., 2022-02-22).  
-- 429 rate limited: Wait and retry with backoff; keep requests minimal during testing.  
-- 403 permission errors: Share the target database/page with your integration and retry.  
-
-## What’s next
-- Set up the headers once in a reusable helper (see Auth basics).  
-- Try a task guide: Query a database or Create a page with content.  
-- Keep Postman variables and .env names aligned to avoid drift across examples.  
+## What's next
+- Use the frontend main.js as a playground for JS fetch calls.
+- Use the Flask app.py as a backend playground and webhook base.
+- Proceed with Auth basics page for headers, tokens, and helpers.

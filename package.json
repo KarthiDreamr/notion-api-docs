@@ -16,7 +16,7 @@
       "dev": "npm run docs:dev"
     },
     "devDependencies": {
-      "@scalar/postman-to-openapi": "^1.0.0",
+      "postman-to-openapi": "^1.0.0",
       "@stoplight/spectral-cli": "^6.0.0"
     },
     "keywords": [

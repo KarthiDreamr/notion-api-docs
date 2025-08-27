@@ -12,8 +12,10 @@ export class NotionAPI {
   constructor() {
     this.token = null;
     this.version = '2022-06-28';
-    // Use proxy in both development and production to avoid CORS issues
-    this.baseURL = '/api/notion/v1';
+    // Use Netlify function URL for production, fallback to original for local dev
+    this.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? '/api/notion/v1' 
+      : '/.netlify/functions/notion-proxy';
     this.retryAttempts = 3;
     this.retryDelay = 1000; // ms
     

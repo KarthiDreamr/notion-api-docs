@@ -41,9 +41,19 @@ export default async function handler(req, res) {
       'Notion-Version': req.headers['notion-version'] || '2022-06-28'
     };
 
-    // Add Authorization header if present
-    if (req.headers.authorization) {
+    // Use the API secret from environment variables for server-side authentication
+    // Note: Netlify does not expose VITE_ prefixed variables to functions by default.
+    const notionApiSecret = process.env.NOTION_API_SECRET;
+
+    if (notionApiSecret) {
+      console.log('✅ Found Netlify environment variable for Notion API secret.');
+      headers.Authorization = `Bearer ${notionApiSecret}`;
+    } else if (req.headers.authorization) {
+      // Fallback to client-side token if env var is not set (for local dev)
+      console.log('⚠️ Netlify environment variable not found. Falling back to client-side Authorization header.');
       headers.Authorization = req.headers.authorization;
+    } else {
+      console.warn('❌ No Notion API token provided in environment or request headers.');
     }
 
     // Build request options

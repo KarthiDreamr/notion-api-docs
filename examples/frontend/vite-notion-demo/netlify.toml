@@ -3,4 +3,10 @@
   publish = "dist"
 
 [functions]
-  directory = "api" 
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/notion/v1/*"
+  to = "/.netlify/functions/notion-proxy/:splat"
+  status = 200
+  force = true 

@@ -259,22 +259,22 @@ VITE_TOAST_DURATION=5000
 
 ## 🚢 Deployment
 
-### Deploy to Vercel (Recommended)
+### Deploy to Netlify (Recommended)
 
 1. **Fork/Clone** this repository
-2. **Connect to Vercel**:
-   - Visit [vercel.com](https://vercel.com)
+2. **Connect to Netlify**:
+   - Visit [app.netlify.com](https://app.netlify.com)
    - Import your repository
-   - Vercel will auto-detect it as a Vite project
+   - Netlify will auto-detect it as a Vite project
 
-3. **Set Environment Variables** in Vercel Dashboard:
+3. **Set Environment Variables** in Netlify Dashboard:
    - Go to Project Settings → Environment Variables
    - Add `VITE_NOTION_API_TOKEN` with your token
    - Add any other optional variables
 
-4. **Deploy**: Vercel will automatically deploy on every push to main branch
+4. **Deploy**: Netlify will automatically deploy on every push to main branch
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-repo/notion-api-docs/tree/main/examples/frontend/vite-notion-demo)
+[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository-url=https://github.com/your-repo/notion-api-docs/tree/main/examples/frontend/vite-notion-demo)
 
 ### Deploy to Netlify
 

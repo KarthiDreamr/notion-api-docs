@@ -540,7 +540,7 @@ const allDatabases = await searchWorkspace("", {
 
 ## Next steps
 
-- Learn about [Comments API](/guides/comments) to add user feedback to search results
-- Set up [Webhooks](webhooks) to trigger search indexing on content changes
-- Review [Error handling](errors) patterns for robust search implementations
-- Explore [Auth basics](/auth) for managing search permissions
+- Learn about [Comments API](/docs/guides/comments) to add user feedback to search results
+- Set up [Webhooks](/docs/webhooks) to trigger search indexing on content changes
+- Review [Error handling](/docs/errors) patterns for robust search implementations
+- Explore [Auth basics](/docs/auth) for managing search permissions

@@ -356,7 +356,7 @@ class NotionClient:
 
 ## Next steps
 
-- [API Reference](../guides/users) - Complete endpoint documentation
-- Set up [Webhooks](docs/webhooks) for real-time updates
+- [API Reference](../docs/guides/users) - Complete endpoint documentation
+- Set up [Webhooks](/webhooks) for real-time updates
 - Review [Error Handling](errors) for robust integration patterns  
 - Build your first integration with the [Sample Apps](https://notion-api-doc.netlify.app/)

@@ -213,6 +213,6 @@ Always implement retry logic with exponential backoff for 429 and 5xx errors.
 
 ## Next steps
 
-- Learn about [Database operations](/guides/databases) to work with Notion databases
-- Set up [Webhooks](webhooks) to receive real-time updates
-- Review [Error handling](errors) best practices
+- Learn about [Database operations](/docs/guides/databases) to work with Notion databases
+- Set up [Webhooks](/docs/webhooks) to receive real-time updates
+- Review [Error handling](/docs/errors) best practices

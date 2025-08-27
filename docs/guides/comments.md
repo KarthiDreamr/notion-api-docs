@@ -654,8 +654,8 @@ for (const comment of flaggedComments) {
 
 ## Next steps
 
-- Set up [Webhooks](webhooks) to receive real-time comment notifications
-- Review [Auth basics](/auth) for managing comment permissions  
-- Learn about [Error handling](errors) patterns for robust comment systems
-- Explore [Search API](/guides/search) to find comments across your workspace
+- Set up [Webhooks](/docs/webhooks) to receive real-time comment notifications
+- Review [Auth basics](/docs/auth) for managing comment permissions  
+- Learn about [Error handling](/docs/errors) patterns for robust comment systems
+- Explore [Search API](/docs/guides/search) to find comments across your workspace
 

@@ -200,11 +200,11 @@ For comprehensive troubleshooting, see the [Error Reference](..errors/).
 🎉 **You're all set!** Your Notion integration is working and ready for development.
 
 ### Explore More:
-- **[Authentication](../auth/)** - Learn about different auth methods
-- **[API Reference](../guides/users)** - Complete endpoint documentation
+- **[Authentication](../docs/auth/)** - Learn about different auth methods
+- **[API Reference](../docs/guides/users)** - Complete endpoint documentation
 
 ### Need Help?
-- Check the **[Error Reference](../errors/)** for common issues
+- Check the **[Error Reference](../docs/errors/)** for common issues
 - Join the **[Notion Developer Community](https://developers.notion.com/community)** for support
 
 **Happy building!** 🚀

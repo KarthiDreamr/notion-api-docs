@@ -719,7 +719,7 @@ Common error responses:
 
 ## Next steps
 
-- Learn about [Search API](/guides/search) to find content across your workspace
-- Review [Comments API](/guides/comments) for adding user feedback to pages
-- Set up [Webhooks](/webhooks) to receive real-time updates when blocks change
-- Review [Error handling](/errors) patterns for robust block operations
+- Learn about [Search API](/docs/guides/search) to find content across your workspace
+- Review [Comments API](/docs/guides/comments) for adding user feedback to pages
+- Set up [Webhooks](/docs/webhooks) to receive real-time updates when blocks change
+- Review [Error handling](/docs/errors) patterns for robust block operations

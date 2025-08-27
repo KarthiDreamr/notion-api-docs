@@ -1,6 +1,6 @@
 /**
  * Vercel API Route - Notion API Proxy
- * Handles all Notion API requests to avoid CORS issues in production
+ * Direct path: /api/notion/v1/[...path]
  */
 
 export default async function handler(req, res) {
@@ -17,10 +17,23 @@ export default async function handler(req, res) {
 
   try {
     const { path } = req.query;
-    const apiPath = Array.isArray(path) ? path.join('/') : path;
+    const apiPath = Array.isArray(path) ? path.join('/') : (path || '');
     
+    // Health check endpoints
+    if (!apiPath || apiPath === 'ping' || apiPath === 'health') {
+      res.status(200).json({ ok: true, name: 'notion-proxy', version: 'v1' });
+      return;
+    }
+
     // Build the Notion API URL
     const notionApiUrl = `https://api.notion.com/v1/${apiPath}`;
+    
+    console.log(`🔄 API Proxy [v1]:`, {
+      method: req.method,
+      path: apiPath,
+      url: notionApiUrl,
+      hasAuth: !!req.headers.authorization
+    });
     
     // Get headers from the original request
     const headers = {
@@ -44,33 +57,40 @@ export default async function handler(req, res) {
       requestOptions.body = JSON.stringify(req.body);
     }
 
-    // Add query parameters for GET requests
+    // Add query parameters for GET requests (excluding 'path' parameter)
     let finalUrl = notionApiUrl;
-    if (req.method === 'GET' && Object.keys(req.query).length > 1) {
+    if (req.method === 'GET' && req.query) {
       const queryParams = new URLSearchParams();
       
       Object.entries(req.query).forEach(([key, value]) => {
-        if (key !== 'path') {
+        if (key !== 'path' && !Array.isArray(value)) {
           queryParams.append(key, value);
         }
       });
       
-      if (queryParams.toString()) {
-        finalUrl += `?${queryParams.toString()}`;
+      const queryString = queryParams.toString();
+      if (queryString) {
+        finalUrl += `?${queryString}`;
       }
     }
-
-    console.log(`🔄 Proxying ${req.method} request to: ${finalUrl}`);
 
     // Make the request to Notion API
     const response = await fetch(finalUrl, requestOptions);
     const data = await response.json();
 
+    if (!response.ok) {
+      console.error(`❌ Notion API Error [v1]:`, {
+        status: response.status,
+        url: finalUrl,
+        data: data
+      });
+    }
+
     // Return the response with the same status code
     res.status(response.status).json(data);
 
   } catch (error) {
-    console.error('❌ Proxy error:', error);
+    console.error('❌ Proxy error [v1]:', error);
     res.status(500).json({
       object: 'error',
       status: 500,

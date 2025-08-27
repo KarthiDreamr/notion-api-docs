@@ -135,19 +135,8 @@ bash
 
 ## Test Your API Connection
 
-Now let's verify everything is working with some test API calls:
+Let's verify everything works with a simple test call:
 
-### Basic Connection Tests (curl)
-
-**1. List users (simple sanity check):**
-```bash
-curl -s -X GET "https://api.notion.com/v1/users" \
-  -H "Authorization: Bearer ${NOTION_TOKEN}" \
-  -H "Notion-Version: ${NOTION_VERSION}" \
-  -H "Content-Type: application/json"
-```
-
-**2. Retrieve your integration info:**
 ```bash
 curl -s -X GET "https://api.notion.com/v1/users/me" \
   -H "Authorization: Bearer ${NOTION_TOKEN}" \
@@ -155,9 +144,9 @@ curl -s -X GET "https://api.notion.com/v1/users/me" \
   -H "Content-Type: application/json"
 ```
 
-### Test Your Sample Content
+**Expected result**: HTTP 200 with JSON describing your integration bot user.
 
-**3. Retrieve your test page:**
+✅ **Success!** Your integration is working. You can now retrieve your test page:
 ```bash
 curl -s -X GET "https://api.notion.com/v1/pages/${PAGE_ID}" \
   -H "Authorization: Bearer ${NOTION_TOKEN}" \
@@ -165,255 +154,37 @@ curl -s -X GET "https://api.notion.com/v1/pages/${PAGE_ID}" \
   -H "Content-Type: application/json"
 ```
 
-**4. Query your test database:**
-```bash
-curl -s -X POST "https://api.notion.com/v1/databases/${DATABASE_ID}/query" \
-  -H "Authorization: Bearer ${NOTION_TOKEN}" \
-  -H "Notion-Version: ${NOTION_VERSION}" \
-  -H "Content-Type: application/json" \
-  -d '{}'
-```
-
-### Expected Results ✅
-- **HTTP 200** status for all requests
-- `/v1/users`: JSON with `results` array containing user objects
-- `/v1/users/me`: JSON describing your integration bot user
-- `/v1/pages/${PAGE_ID}`: JSON with your test page data and properties
-- `/v1/databases/${DATABASE_ID}/query`: JSON with `results` array containing your database rows
-
-## JavaScript Example (Frontend)
-
-Create a comprehensive frontend example that tests your setup:
+## Quick JavaScript Example
 
 ```js
-// main.js - Complete API testing example
-const BASE_URL = "https://api.notion.com/v1";
-const config = {
-  token: import.meta.env.VITE_NOTION_TOKEN,
-  version: import.meta.env.VITE_NOTION_VERSION || "2022-02-22",
-  pageId: import.meta.env.VITE_PAGE_ID,
-  databaseId: import.meta.env.VITE_DATABASE_ID
-};
-
-// Helper function for API calls
-async function notionFetch(endpoint, options = {}) {
-  const res = await fetch(`${BASE_URL}${endpoint}`, {
-    headers: {
-      "Authorization": `Bearer ${config.token}`,
-      "Notion-Version": config.version,
-      "Content-Type": "application/json",
-      ...options.headers
-    },
-    ...options
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`HTTP ${res.status}: ${text}`);
+// Simple fetch example
+const res = await fetch("https://api.notion.com/v1/users/me", {
+  headers: {
+    "Authorization": "Bearer " + import.meta.env.VITE_NOTION_TOKEN,
+    "Notion-Version": "2022-02-22",
+    "Content-Type": "application/json"
   }
-
-  return res.json();
-}
-
-// Test functions
-async function testConnection() {
-  console.log("🔗 Testing basic connection...");
-  const users = await notionFetch("/users");
-  console.log("✅ Users fetched:", users.results?.length || 0);
-}
-
-async function testPageRetrieval() {
-  console.log("📄 Testing page retrieval...");
-  const page = await notionFetch(`/pages/${config.pageId}`);
-  console.log("✅ Page retrieved:", page.properties?.title?.title?.[0]?.plain_text || "Untitled");
-}
-
-async function testDatabaseQuery() {
-  console.log("🗃️ Testing database query...");
-  const results = await notionFetch(`/databases/${config.databaseId}/query`, {
-    method: "POST",
-    body: JSON.stringify({})
-  });
-  console.log("✅ Database queried:", results.results?.length || 0, "rows found");
-}
-
-// Run all tests
-async function runTests() {
-  try {
-    await testConnection();
-    await testPageRetrieval();
-    await testDatabaseQuery();
-    console.log("🎉 All tests passed!");
-  } catch (err) {
-    console.error("❌ Test failed:", err.message);
-  }
-}
-
-runTests();
+});
+const data = await res.json();
+console.log("Integration info:", data);
 ```
 
-**Environment file (.env.local for Vite):**
-```bash
-VITE_NOTION_TOKEN=secret_abc123...
-VITE_NOTION_VERSION=2022-02-22
-VITE_PAGE_ID=abc123def456...
-VITE_DATABASE_ID=xyz789abc123...
-```
-
-## Python Example (Flask Backend)
-
-Create a comprehensive Flask app that tests all your Notion setup:
+## Quick Python Example
 
 ```python
-# app.py - Complete Notion API testing server
 import os
 import requests
-from flask import Flask, jsonify, request
 
-app = Flask(__name__)
-
-# Configuration from environment variables
-config = {
-    'token': os.getenv("NOTION_TOKEN"),
-    'version': os.getenv("NOTION_VERSION", "2022-02-22"),
-    'page_id': os.getenv("PAGE_ID"),
-    'database_id': os.getenv("DATABASE_ID")
+token = os.getenv("NOTION_TOKEN")
+headers = {
+    "Authorization": f"Bearer {token}",
+    "Notion-Version": "2022-02-22",
+    "Content-Type": "application/json"
 }
 
-BASE_URL = "https://api.notion.com/v1"
-
-def notion_request(method, endpoint, data=None):
-    """Helper function for Notion API requests"""
-    headers = {
-        "Authorization": f"Bearer {config['token']}",
-        "Notion-Version": config['version'],
-        "Content-Type": "application/json"
-    }
-    
-    url = f"{BASE_URL}{endpoint}"
-    response = requests.request(method, url, headers=headers, json=data)
-    
-    try:
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.HTTPError:
-        return {
-            'error': f'HTTP {response.status_code}',
-            'message': response.text
-        }, response.status_code
-
-@app.route('/')
-def index():
-    """Test overview page"""
-    return jsonify({
-        'message': 'Notion API Test Server',
-        'endpoints': {
-            '/users': 'List workspace users',
-            '/me': 'Get integration info', 
-            '/test-page': 'Retrieve your test page',
-            '/test-database': 'Query your test database',
-            '/run-tests': 'Run all tests at once'
-        }
-    })
-
-@app.route('/users')
-def list_users():
-    """Test basic user listing"""
-    return notion_request('GET', '/users')
-
-@app.route('/me') 
-def get_me():
-    """Test integration info retrieval"""
-    return notion_request('GET', '/users/me')
-
-@app.route('/test-page')
-def get_test_page():
-    """Test retrieving your sample page"""
-    if not config['page_id']:
-        return jsonify({'error': 'PAGE_ID environment variable not set'}), 400
-    return notion_request('GET', f"/pages/{config['page_id']}")
-
-@app.route('/test-database')
-def query_test_database():
-    """Test querying your sample database"""
-    if not config['database_id']:
-        return jsonify({'error': 'DATABASE_ID environment variable not set'}), 400
-    return notion_request('POST', f"/databases/{config['database_id']}/query", {})
-
-@app.route('/run-tests')
-def run_all_tests():
-    """Run all tests and return comprehensive results"""
-    results = {}
-    
-    # Test 1: List users
-    users_result = notion_request('GET', '/users')
-    results['users_test'] = {
-        'status': 'success' if isinstance(users_result, dict) and 'results' in users_result else 'failed',
-        'user_count': len(users_result.get('results', [])) if isinstance(users_result, dict) else 0
-    }
-    
-    # Test 2: Get integration info  
-    me_result = notion_request('GET', '/users/me')
-    results['integration_test'] = {
-        'status': 'success' if isinstance(me_result, dict) and 'name' in me_result else 'failed',
-        'integration_name': me_result.get('name') if isinstance(me_result, dict) else None
-    }
-    
-    # Test 3: Get test page (if configured)
-    if config['page_id']:
-        page_result = notion_request('GET', f"/pages/{config['page_id']}")
-        results['page_test'] = {
-            'status': 'success' if isinstance(page_result, dict) and 'properties' in page_result else 'failed',
-            'page_title': page_result.get('properties', {}).get('title', {}).get('title', [{}])[0].get('plain_text') if isinstance(page_result, dict) else None
-        }
-    
-    # Test 4: Query test database (if configured)  
-    if config['database_id']:
-        db_result = notion_request('POST', f"/databases/{config['database_id']}/query", {})
-        results['database_test'] = {
-            'status': 'success' if isinstance(db_result, dict) and 'results' in db_result else 'failed',
-            'row_count': len(db_result.get('results', [])) if isinstance(db_result, dict) else 0
-        }
-    
-    # Overall status
-    all_passed = all(test.get('status') == 'success' for test in results.values())
-    results['overall'] = {
-        'status': 'all_tests_passed' if all_passed else 'some_tests_failed',
-        'message': '🎉 All tests passed!' if all_passed else '⚠️ Some tests failed - check individual results'
-    }
-    
-    return jsonify(results)
-
-if __name__ == '__main__':
-    # Validate required environment variables
-    if not config['token']:
-        print("❌ NOTION_TOKEN environment variable is required")
-        exit(1)
-        
-    print("🚀 Starting Notion API test server...")
-    print("📝 Available endpoints:")
-    print("  - http://localhost:5000/run-tests (comprehensive test)")
-    print("  - http://localhost:5000/users")  
-    print("  - http://localhost:5000/me")
-    if config['page_id']:
-        print("  - http://localhost:5000/test-page")
-    if config['database_id']:
-        print("  - http://localhost:5000/test-database")
-    
-    app.run(port=5000, debug=True)
-```
-
-**Requirements (requirements.txt):**
-```txt
-Flask==2.3.3
-requests==2.31.0
-```
-
-**Install and run:**
-```bash
-pip install -r requirements.txt
-python app.py
-# Visit http://localhost:5000/run-tests to test everything
+# Test your integration
+response = requests.get("https://api.notion.com/v1/users/me", headers=headers)
+print("Integration info:", response.json())
 ```
 
 ## Common Errors and Solutions 🔧
@@ -456,24 +227,16 @@ python app.py
 
 ## What's Next 🚀
 
-Congratulations! You now have a complete Notion API development environment. Here are your next steps:
+🎉 **You're all set!** Your Notion integration is working and ready for development.
 
-### Immediate Next Steps
-1. **Experiment** with the provided code examples
-2. **Modify** the JavaScript/Python examples to try different API endpoints  
-3. **Explore** the [API Reference](../api-reference/) to discover more capabilities
+### Explore More:
+- **[Working with Pages](../working-with-pages/)** - Read, update, and create page content
+- **[Database Operations](../working-with-databases/)** - Query and modify database entries
+- **[API Reference](../api-reference/)** - Complete endpoint documentation
+- **[Code Examples](../examples/)** - More comprehensive JavaScript, Python, and other language examples
 
-### Recommended Learning Path
-1. **[Authentication Guide](../auth/)** - Learn about different auth methods and security best practices
-2. **[Working with Pages](../working-with-pages/)** - Deep dive into page content manipulation
-3. **[Database Operations](../working-with-databases/)** - Advanced database queries and updates
-4. **[Webhooks](../webhooks/)** - Real-time notifications for your integrations
+### Need Help?
+- Check the **[Troubleshooting Guide](../troubleshooting/)** for common issues
+- Join the **[Notion Developer Community](https://developers.notion.com/community)** for support
 
-### Development Tips
-- **Use the Flask app** (`/run-tests` endpoint) as a backend API playground
-- **Use the JavaScript example** as a frontend testing environment
-- **Create additional test pages** in your workspace as you learn new concepts
-- **Join the [Notion Developer Community](https://developers.notion.com/community)** for support and inspiration
-
-### Ready to Build?
-Your integration is now configured and ready for real development. Start building something awesome! 🎯
+**Happy building!** 🚀

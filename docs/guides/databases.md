@@ -452,9 +452,3 @@ Always implement retry logic with exponential backoff for 429 and 5xx errors.
 3. **Optimize filters**: Use specific property filters to reduce response size
 4. **Handle rate limits**: Implement exponential backoff for 429 responses
 5. **Validate property types**: Check database schema before querying specific properties
-
-## Next steps
-
-- Learn about [Pages API](/docs/guides/pages) to create and update database pages
-- Set up [Webhooks](/docs/webhooks) to receive real-time database updates
-- Review [Error handling](/docs/errors) patterns for robust integrations

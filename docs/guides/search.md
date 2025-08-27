@@ -537,10 +537,3 @@ const allDatabases = await searchWorkspace("", {
   filter: { property: "object", value: "database" }
 });
 ```
-
-## Next steps
-
-- Learn about [Comments API](/docs/guides/comments) to add user feedback to search results
-- Set up [Webhooks](/docs/webhooks) to trigger search indexing on content changes
-- Review [Error handling](/docs/errors) patterns for robust search implementations
-- Explore [Auth basics](/docs/auth) for managing search permissions

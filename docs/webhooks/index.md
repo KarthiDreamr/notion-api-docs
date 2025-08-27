@@ -689,6 +689,6 @@ CMD ["node", "webhook-handler.js"]
 ## Next steps
 
 - Review [Error Handling](/errors) for robust webhook error management
-- Explore [Sample Apps](/examples) with webhook implementations
+- Explore [Sample Apps](https://notion-api-doc.netlify.app/) with webhook implementations
 - Set up monitoring and alerting for your webhook endpoints
 - Implement webhook event processing for your specific use cases

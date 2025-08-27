@@ -836,7 +836,7 @@ def test_no_retry_on_bad_request():
 
 ## Next steps
 
-- Implement comprehensive error handling in your [Sample Apps](/examples)
+- Implement comprehensive error handling in your [Sample Apps](https://notion-api-doc.netlify.app/)
 - Set up monitoring and alerting for your integration
 - Create error handling documentation for your team
 - Test error scenarios in your development environment

@@ -697,9 +697,3 @@ Always validate property types against the database schema before making request
 3. **Handle large content**: Use the Blocks API for complex page content
 4. **Implement retries**: Handle 429 rate limits with exponential backoff
 5. **Batch operations**: Group multiple page updates when possible
-
-## Next steps
-
-- Learn about [Blocks API](/docs/guides/blocks) to manage page content structure
-- Set up [Webhooks](/docs/webhooks) to receive real-time page updates
-- Review [Error handling](/docs/errors) patterns for robust page operations

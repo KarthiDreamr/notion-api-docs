@@ -1,9 +1,3 @@
----
-title: AI guides — tools and prompts
-sidebar_position: 98
-slug: /ai-guides/tools-and-prompts
----
-
 # AI Guides - Tools Used and Prompts
 
 This section documents the AI-powered development approach used to create this Notion API documentation and sample applications, providing insights for developers looking to leverage similar AI-assisted workflows.

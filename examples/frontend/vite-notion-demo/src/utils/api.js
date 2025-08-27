@@ -12,10 +12,8 @@ export class NotionAPI {
   constructor() {
     this.token = null;
     this.version = '2022-06-28';
-    // Use proxy in development to avoid CORS issues, direct API in production
-    this.baseURL = import.meta.env.DEV 
-      ? '/api/notion/v1' 
-      : 'https://api.notion.com/v1';
+    // Use proxy in both development and production to avoid CORS issues
+    this.baseURL = '/api/notion/v1';
     this.retryAttempts = 3;
     this.retryDelay = 1000; // ms
     

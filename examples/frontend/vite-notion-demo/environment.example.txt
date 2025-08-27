@@ -1,0 +1,59 @@
+# Notion API Demo - Environment Variables
+# Copy this content to a file named .env in the project root
+
+# ============================================================================
+# NOTION API CONFIGURATION
+# ============================================================================
+
+# Your Notion Integration Token (REQUIRED)
+# Get this from: https://www.notion.so/my-integrations  
+# Format: secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx or ntn_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_NOTION_API_TOKEN=your_integration_token_here
+
+# Notion API Version (optional, defaults to 2022-06-28)
+VITE_NOTION_API_VERSION=2022-06-28
+
+# ============================================================================
+# APPLICATION CONFIGURATION
+# ============================================================================
+
+# Development mode (true/false)
+VITE_DEV_MODE=true
+
+# Enable debug logging (true/false)
+VITE_DEBUG_LOGGING=true
+
+# Default page size for API calls (optional, defaults to 100)
+VITE_DEFAULT_PAGE_SIZE=100
+
+# API request timeout in milliseconds (optional, defaults to 30000)
+VITE_API_TIMEOUT=30000
+
+# ============================================================================
+# UI CONFIGURATION
+# ============================================================================
+
+# Default theme (light/dark)
+VITE_DEFAULT_THEME=light
+
+# Toast notification duration in ms
+VITE_TOAST_DURATION=5000
+
+# ============================================================================
+# SETUP INSTRUCTIONS
+# ============================================================================
+#
+# 1. Create a new file called .env in the project root
+# 2. Copy the contents of this file into .env
+# 3. Replace VITE_NOTION_API_TOKEN with your actual token
+# 4. Customize other settings as needed
+#
+# To get a Notion API token:
+# 1. Go to https://www.notion.so/my-integrations
+# 2. Click "New integration"
+# 3. Fill in the basic information
+# 4. Click "Submit" 
+# 5. Copy the "Internal Integration Token"
+# 6. Share your databases/pages with the integration
+#
+# ============================================================================ 

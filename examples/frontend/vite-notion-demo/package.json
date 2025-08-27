@@ -1,0 +1,47 @@
+{
+  "name": "vite-notion-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A comprehensive Vite + Vanilla JavaScript frontend demo for the Notion API",
+  "keywords": ["notion", "api", "vite", "javascript", "demo", "frontend"],
+  "author": "Notion API Documentation Team",
+  "license": "MIT",
+  "homepage": "https://developers.notion.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makenotion/notion-api-docs.git",
+    "directory": "examples/frontend/vite-notion-demo"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,html --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{js,html,css}\" \"*.{js,html,json}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "date-fns": "^2.30.0",
+    "lucide": "^0.294.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-html": "^7.1.0",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.2",
+    "vite": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+} 

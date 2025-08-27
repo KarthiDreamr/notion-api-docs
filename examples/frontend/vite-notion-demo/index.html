@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive demo for the Notion API - explore users, databases, pages, blocks, search, and comments" />
+  <meta name="keywords" content="notion, api, demo, vite, javascript, frontend" />
+  <meta name="author" content="Notion API Documentation Team" />
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Notion API Demo - Interactive Frontend" />
+  <meta property="og:description" content="Explore the Notion API with this comprehensive interactive demo" />
+  <meta property="og:site_name" content="Notion API Demo" />
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://api.notion.com" />
+  <link rel="dns-prefetch" href="https://api.notion.com" />
+  
+  <title>Notion API Demo - Interactive Frontend</title>
+</head>
+<body class="h-full bg-gray-50 font-sans antialiased">
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-white">
+    <div class="text-center">
+      <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-notion-600 border-r-transparent"></div>
+      <p class="mt-4 text-gray-600">Loading Notion API Demo...</p>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div id="app" class="hidden min-h-full">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <!-- Logo and Title -->
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-8 w-8 text-notion-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4 4v16h16V4H4zm2 2h12v12H6V6z"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h1 class="text-xl font-semibold text-gray-900">Notion API Demo</h1>
+              <p class="text-sm text-gray-500">Interactive frontend for testing API endpoints</p>
+            </div>
+          </div>
+
+          <!-- Connection Status -->
+          <div class="flex items-center space-x-4">
+            <div id="connection-status" class="flex items-center">
+              <div class="h-2 w-2 bg-red-500 rounded-full mr-2"></div>
+              <span class="text-sm text-gray-600">Disconnected</span>
+            </div>
+            <button id="settings-btn" class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Token Setup Banner -->
+      <div id="token-setup" class="mb-8 rounded-md bg-yellow-50 p-4 border border-yellow-200">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="ml-3 flex-1">
+            <h3 class="text-sm font-medium text-yellow-800">API Token Required</h3>
+            <div class="mt-2 text-sm text-yellow-700">
+              <p>Add your Notion integration token to start testing the API endpoints.</p>
+            </div>
+            <div class="mt-4">
+              <div class="flex space-x-3">
+                <input
+                  type="password"
+                  id="token-input"
+                  placeholder="secret_xxxxx... or ntn_xxxxx..."
+                  class="form-input flex-1 rounded-md border-gray-300 shadow-sm focus:border-notion-500 focus:ring-notion-500"
+                />
+                <button
+                  id="save-token-btn"
+                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-notion-600 hover:bg-notion-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-notion-500"
+                >
+                  Save Token
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="border-b border-gray-200 mb-8">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-notion-500 text-notion-600" data-tab="users">
+            Users
+          </button>
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="databases">
+            Databases
+          </button>
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="pages">
+            Pages
+          </button>
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="blocks">
+            Blocks
+          </button>
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="search">
+            Search
+          </button>
+          <button class="api-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="comments">
+            Comments
+          </button>
+        </nav>
+      </div>
+
+      <!-- Tab Content -->
+      <div id="tab-content" class="space-y-6">
+        <!-- Each tab content will be rendered here -->
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)]">
+      <!-- Toast messages will be inserted here -->
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-container" class="hidden fixed inset-0 z-50 overflow-y-auto">
+      <!-- Modal content will be inserted here -->
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html> 

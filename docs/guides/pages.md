@@ -701,5 +701,5 @@ Always validate property types against the database schema before making request
 ## Next steps
 
 - Learn about [Blocks API](/guides/blocks) to manage page content structure
-- Set up [Webhooks](/webhooks) to receive real-time page updates
-- Review [Error handling](/errors) patterns for robust page operations
+- Set up [Webhooks](webhooks) to receive real-time page updates
+- Review [Error handling](errors) patterns for robust page operations

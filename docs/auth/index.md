@@ -26,40 +26,7 @@ Every Notion API request must include these headers:
 
 ## Getting your integration token
 
-1. Visit the [Notion Integrations](https://www.notion.so/my-integrations) page
-2. Click "New integration" and configure your integration
-3. Copy the "Internal Integration Token" (starts with `secret_`)
-4. Share your integration with the workspace or specific pages you need to access
-
-## Managing tokens securely
-
-### Environment variables
-
-**Never hardcode tokens in your source code.** Use environment variables:
-
-**.env.example:**
-```bash
-# Notion API Configuration
-NOTION_TOKEN=your_integration_token_here
-NOTION_VERSION=2022-02-22
-
-# Optional: Specific resource IDs for testing
-DATABASE_ID=your_database_id
-PAGE_ID=your_page_id
-```
-
-**Loading in JavaScript (Vite):**
-```js
-const token = import.meta.env.VITE_NOTION_TOKEN;
-const version = import.meta.env.VITE_NOTION_VERSION || '2022-02-22';
-```
-
-**Loading in Python:**
-```python
-import os
-token = os.getenv('NOTION_TOKEN')
-version = os.getenv('NOTION_VERSION', '2022-02-22')
-```
+If you haven't already set up an integration, follow the [Quickstart Guide](../quickstart/) for complete setup instructions. Never hardcode tokens in your source code.
 
 ## Reusable auth helpers
 
@@ -246,44 +213,17 @@ def handle_notion_error(error):
 
 ### Testing authentication
 
-**JavaScript:**
-```js
-// Test authentication and token validity
-async function testAuth() {
-  try {
-    const botUser = await notion.notionFetch('/users/me');
-    console.log('✅ Authentication successful');
-    console.log('Bot user:', botUser);
-    return true;
-  } catch (error) {
-    console.error('❌ Authentication failed:', error.message);
-    return false;
-  }
-}
-```
+For basic authentication testing, see the [Quickstart Guide](../quickstart/#test-your-api-connection). For production applications, consider these enhanced testing patterns:
 
-**Python:**
-```python
-# Test authentication and token validity
-def test_auth():
-    try:
-        bot_user = notion.get('/users/me')
-        print('✅ Authentication successful')
-        print(f"Bot user: {bot_user}")
-        return True
-    except NotionAPIError as error:
-        print(f'❌ Authentication failed: {error}')
-        return False
-```
+## Advanced authentication errors
 
-## Common authentication errors
+Beyond the [common issues covered in Quickstart](../quickstart/#common-issues), here are additional authentication scenarios:
 
-| Status Code | Error | Cause | Solution |
+| Status Code | Error | Advanced Cause | Solution |
 |-------------|-------|-------|----------|
-| **401** | `Unauthorized` | Missing, invalid, or expired token | Check token value and regenerate if needed |
-| **403** | `Forbidden` | Token lacks permissions for the resource | Share integration with workspace/page |
-| **400** | `Bad Request` | Missing Notion-Version header | Add required API version header |
-| **429** | `Too Many Requests` | Rate limit exceeded | Implement exponential backoff |
+| **401** | `Unauthorized` | Token expired or revoked | Regenerate token and update all environments |
+| **403** | `Forbidden` | Integration lacks specific capability | Review and update integration permissions |
+| **429** | `Too Many Requests` | Sustained rate limit violations | Implement exponential backoff with jitter |
 
 ## Error handling patterns
 
@@ -371,13 +311,14 @@ When creating integrations, configure appropriate capabilities:
 
 ## Troubleshooting authentication
 
-### Quick diagnostic checklist
+### Advanced diagnostic checklist
 
-1. **Token format**: Should start with `secret_` 
-2. **Environment loading**: Verify token is loaded correctly
-3. **Header format**: Ensure `Authorization: Bearer <token>`
-4. **API version**: Use a supported version date
-5. **Workspace access**: Integration must be shared with target resources
+For basic troubleshooting, see the [Quickstart Guide](../quickstart/#common-issues). For complex authentication issues:
+
+1. **Token rotation**: Check if token was recently regenerated
+2. **Multi-environment sync**: Ensure all environments have updated tokens
+3. **Permission scope**: Verify integration has required capabilities
+4. **Rate limiting**: Monitor for sustained high request volumes
 
 ### Debug logging
 
@@ -415,7 +356,7 @@ class NotionClient:
 
 ## Next steps
 
-- Set up [Webhooks](/webhooks) for real-time updates
-- Review [Error Handling](/errors) for robust integration patterns  
-- Explore the API endpoint guides for specific operations
-- Build your first integration with the [Sample Apps](/examples)
+- [API Reference](../guides/users) - Complete endpoint documentation
+- Set up [Webhooks](docs/webhooks) for real-time updates
+- Review [Error Handling](errors) for robust integration patterns  
+- Build your first integration with the [Sample Apps](https://notion-api-doc.netlify.app/)

@@ -456,5 +456,5 @@ Always implement retry logic with exponential backoff for 429 and 5xx errors.
 ## Next steps
 
 - Learn about [Pages API](/guides/pages) to create and update database pages
-- Set up [Webhooks](/webhooks) to receive real-time database updates
-- Review [Error handling](/errors) patterns for robust integrations
+- Set up [Webhooks](webhooks) to receive real-time database updates
+- Review [Error handling](errors) patterns for robust integrations

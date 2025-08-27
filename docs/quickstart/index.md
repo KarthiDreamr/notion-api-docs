@@ -187,56 +187,24 @@ response = requests.get("https://api.notion.com/v1/users/me", headers=headers)
 print("Integration info:", response.json())
 ```
 
-## Common Errors and Solutions 🔧
+## Common Issues
 
-### Authentication Errors
-- **401 Unauthorized**: 
-  - ✅ Verify your `NOTION_TOKEN` is correct (starts with `secret_`)
-  - ✅ Ensure the integration has access to the workspace  
-  - ✅ Check that pages/databases are shared with your integration
+- **401 Unauthorized**: Check your `NOTION_TOKEN` and ensure integration has workspace access
+- **403 Forbidden**: Share your pages/databases with the integration (Share → Invite → search for integration name)
+- **Missing headers**: Always include `Notion-Version: 2022-02-22` header
 
-### Permission Errors  
-- **403 Forbidden**:
-  - ✅ Share the specific page/database with your integration
-  - ✅ Go to the page → Share → Invite → Search for your integration name
-  - ✅ Grant "Can edit" permissions
-
-### API Version Issues
-- **400/404 with version errors**:
-  - ✅ Include the `Notion-Version` header in all requests
-  - ✅ Use a supported version like `2022-02-22`
-  - ✅ Ensure header is formatted correctly: `Notion-Version: 2022-02-22`
-
-### Rate Limiting
-- **429 Too Many Requests**:
-  - ✅ Implement exponential backoff in your retry logic
-  - ✅ Reduce request frequency during development/testing
-  - ✅ Consider caching responses when possible
-
-### ID Format Issues
-- **Invalid page/database ID**:
-  - ✅ IDs should be 32 characters (letters, numbers, dashes)
-  - ✅ Extract from URL: `notion.so/page-abc123def456...` → `abc123def456...`
-  - ✅ Remove any dashes from the URL format if present
-
-### Environment Variable Issues  
-- **Missing token errors**:
-  - ✅ Restart your terminal after setting environment variables
-  - ✅ Use `echo $NOTION_TOKEN` to verify the variable is set
-  - ✅ For web apps, check `.env` file is in the correct location
+For comprehensive troubleshooting, see the [Error Reference](..errors/).
 
 ## What's Next 🚀
 
 🎉 **You're all set!** Your Notion integration is working and ready for development.
 
 ### Explore More:
-- **[Working with Pages](../working-with-pages/)** - Read, update, and create page content
-- **[Database Operations](../working-with-databases/)** - Query and modify database entries
-- **[API Reference](../api-reference/)** - Complete endpoint documentation
-- **[Code Examples](../examples/)** - More comprehensive JavaScript, Python, and other language examples
+- **[Authentication](../auth/)** - Learn about different auth methods
+- **[API Reference](../guides/users)** - Complete endpoint documentation
 
 ### Need Help?
-- Check the **[Troubleshooting Guide](../troubleshooting/)** for common issues
+- Check the **[Error Reference](../errors/)** for common issues
 - Join the **[Notion Developer Community](https://developers.notion.com/community)** for support
 
 **Happy building!** 🚀

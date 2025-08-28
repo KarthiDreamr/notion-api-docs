@@ -127,3 +127,146 @@ async function withRetry(fn, { attempts = 5 } = {}) {
 - Define severity levels and playbooks for unsafe output in Slack or external channels; revoke tokens if needed.  
 - Capture the minimal evidence required, notify stakeholders, and add temporary guardrails until a fix ships.  
 - Post‑mortem with action items on prompts, filters, or product UX.
+
+## Quickstart: Minimal safety pipeline
+
+```js
+// safety-pipeline.js
+import { redact } from './redact.js';
+import { moderate } from './moderation.js';
+
+const MAX_INPUT = 5000;
+
+export async function safeGenerate({ input, generate }) {
+  const sanitized = redact(String(input)).slice(0, MAX_INPUT);
+
+  const inCheck = await moderate(sanitized);
+  if (!inCheck.allowed) {
+    return { blocked: true, where: 'input', reason: inCheck.category };
+  }
+
+  const result = await generate(sanitized); // your model call
+  const outCheck = await moderate(result.text || '');
+  if (!outCheck.allowed) {
+    return { blocked: true, where: 'output', reason: outCheck.category };
+  }
+
+  return { blocked: false, text: result.text };
+}
+```
+
+### .env example
+
+```bash
+# AI provider
+OPENAI_API_KEY=your_openai_key
+MODERATION_ENABLED=true
+REDACTION_ENABLED=true
+SAFETY_MODE=strict
+
+# Slack
+SLACK_SIGNING_SECRET=your_signing_secret
+SLACK_BOT_TOKEN=xoxb-...
+```
+
+## OpenAI moderation integration
+
+### JavaScript (Node)
+
+```js
+// moderation.js
+import OpenAI from 'openai';
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+export async function moderate(text) {
+  if (process.env.MODERATION_ENABLED === 'false') {
+    return { allowed: true, category: 'disabled' };
+  }
+
+  const resp = await client.moderations.create({
+    model: 'omni-moderation-latest',
+    input: String(text).slice(0, 5000)
+  });
+
+  const r = resp.results?.[0];
+  const allowed = r ? !r.flagged : true;
+  const categories = r ? Object.entries(r.categories).filter(([, v]) => v).map(([k]) => k) : [];
+  return { allowed, category: categories.join(', ') || 'none' };
+}
+```
+
+### Python
+
+```python
+# moderation.py
+from openai import OpenAI
+import os
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+def moderate(text: str) -> dict:
+    if os.getenv('MODERATION_ENABLED', 'true').lower() == 'false':
+        return { 'allowed': True, 'category': 'disabled' }
+
+    resp = client.moderations.create(
+        model='omni-moderation-latest',
+        input=(text or '')[:5000]
+    )
+    r = resp.results[0]
+    allowed = not r.flagged
+    categories = [k for k, v in r.categories.items() if v]
+    return { 'allowed': allowed, 'category': ', '.join(categories) or 'none' }
+```
+
+## Slack gating (ephemeral → channel)
+
+```js
+// slack-gating.js
+import { App } from '@slack/bolt';
+import { moderate } from './moderation.js';
+import { redact } from './redact.js';
+
+const app = new App({
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  token: process.env.SLACK_BOT_TOKEN,
+});
+
+app.command('/ask', async ({ command, ack, respond }) => {
+  await ack();
+
+  const userText = command.text || '';
+  const redacted = redact(userText);
+  const inMod = await moderate(redacted);
+  if (!inMod.allowed) {
+    return respond({ response_type: 'ephemeral', text: `⚠️ Blocked by policy: ${inMod.category}` });
+  }
+
+  // Generate (pseudo)
+  const answer = `You asked: ${redacted}`;
+
+  const outMod = await moderate(answer);
+  if (!outMod.allowed) {
+    return respond({ response_type: 'ephemeral', text: `⚠️ Output blocked: ${outMod.category}` });
+  }
+
+  return respond({ response_type: 'in_channel', text: answer });
+});
+```
+
+## Policy mapping (example)
+
+| Category | Action |
+|---|---|
+| `sexual/minors` | Block; escalate to human review |
+| `hate` / `harassment` | Block; log category only |
+| `violence/graphic` | Block |
+| `self-harm` | Block; show help resources |
+| `pii` (emails, phones, secrets) | Redact; require explicit consent for processing |
+| `malware/instructions` | Block |
+| `copyright` | Summarize; avoid verbatim reproduction |
+
+## References
+
+- OpenAI safety and usage: [OpenAI policies](https://openai.com/policies)
+- Slack app security: [Slack API security](https://api.slack.com/authentication/verifying-requests-from-slack)
